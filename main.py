@@ -138,5 +138,7 @@ def HomotopyMethod(x_init, lambd_step=0.05, tol=1e-5, max_iter=1000):
 x_init = np.array([0,0])
 result = HomotopyMethod(x_init)
 
+def Newton_extendido(x):
+    pass
 
 
