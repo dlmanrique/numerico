@@ -13,18 +13,30 @@ plt.triplot(points[:,0], points[:,1], tri.simplices)
 plt.plot(points[:,0], points[:,1], 'o')
 plt.show()
 """
+def F(x):
+    x1,x2 = x
+    return np.array([3*x1-x2+2,
+                    2*x1**2-x2])
 
+"""
+def F(x):
+    x1,x2=x
+    return np.array([x1**(2)+x2**(2)-10,
+                    x1-3*x2+10])
+"""
+"""
 def F(x):
     x1, x2 = x
     return np.array([1/2 * x2**(1/3) / x1**(1/2) - 1/2,
                      1/3 * x1**(1/2) / x2**(2/3) - 1/3])
+"""
 #Primer intento de definir  H(x)
 def H_N(x, lambd, x0):
     return F(x) - (1 - lambd) * F(x0)
 
 def H_FP(x, lambd, x0):
     return (1-lambd)*(x-x0) + lambd * F(x) 
-    
+"""   
 def Fprime(x):
     x1, x2 = x
     Fprime = np.zeros((2, len(x)))
@@ -33,7 +45,26 @@ def Fprime(x):
     Fprime[1][0] =  1/6 * x2**(-2/3) * x1**(-1/2)
     Fprime[1][1] = -2/9 * x1**( 1/2) * x2**(-5/3)
     return Fprime
+"""
+"""
+def Fprime(x):
+    x1, x2 = x
+    Fprime = np.zeros((2, len(x)))
+    Fprime[0][0] = 2*x1
+    Fprime[0][1] =  2*x2
+    Fprime[1][0] =  1
+    Fprime[1][1] = -3
+    return Fprime
+"""
 
+def Fprime(x):
+    x1, x2 = x
+    Fprime = np.zeros((2, len(x)))
+    Fprime[0][0] = 3
+    Fprime[0][1] =  -1
+    Fprime[1][0] =  4*x1
+    Fprime[1][1] = -1
+    return Fprime
 def derH(x):
     return Fprime(x)
 
@@ -104,54 +135,8 @@ def HomotopyMethod(x_init, lambd_step=0.05, tol=1e-5, max_iter=1000):
     
     return result
 
-x_init = np.array([3, 40])
+x_init = np.array([0,0])
 result = HomotopyMethod(x_init)
 
 
-def plot2D(result):
-    xy = np.array(result['x'])
-    x = xy[:, 0]
-    y = xy[:, 1]
-    z = np.array(result['lambda'])
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
-
-    ax1.plot(z, x)
-    ax1.set_title('Zero Path of H(x, λ) vs x1')
-    ax1.set_ylabel(r'$x_1$')
-    ax1.set_xlabel(r'$\lambda$')
-    ax1.set_xlim(0, 1)
-
-    ax2.plot(z, y)
-    ax2.set_title('Zero Path of H(x, λ) vs x2')
-    ax2.set_ylabel(r'$x_2$')
-    ax2.set_xlabel(r'$\lambda$')
-    ax2.set_xlim(0, 1)
-
-    plt.tight_layout()
-    plt.show()
-
-def plot3D(result):
-    xy = np.array(result['x'])
-    x = xy[:, 0]
-    y = xy[:, 1]
-    z = np.array(result['lambda'])
-
-    fig = plt.figure()
-    ax = Axes3D(fig)
-
-    def init():
-        ax.plot(x, y, z)
-        ax.set_xlabel(r'$x_1$')
-        ax.set_ylabel(r'$x_2$')
-        ax.set_zlabel(r'$\lambda$')
-        return fig
-    def animate(i):
-        ax.view_init(elev=15, azim=i)
-        return fig
-
-    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=30, blit=True)
-    plt.figure()
-    plt.show(anim)
-    plt.show()
 
