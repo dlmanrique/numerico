@@ -7,16 +7,6 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
 """
-points = np.array([[0, 0], [0, 1],[2,0], [1, 0],[2,1], [1, 1]])
-tri = Delaunay(points)
-
-print(points[tri.simplices])
-plt.figure()
-plt.triplot(points[:,0], points[:,1], tri.simplices)
-plt.plot(points[:,0], points[:,1], 'o')
-plt.show()
-"""
-"""
 def F(x):
     x1,x2=x
     return np.array([x1**(2)+x2**(2)-10,
@@ -89,7 +79,6 @@ def HomotopyMethod(x_ini, lambd_step=0.05, tol=1e-5, max_iter=1000):
     lambd_prev = 0
     lambd = lambd_prev
     resultado = {'lambda':[lambd], 'x':[x0]}
-    print('Condicion inicial:  \u03BB = {:.2f}, x = {} \n'.format(lambd, x0))
     k = 0
     while abs(lambd - 1) > np.finfo(float).eps:
         lambd = min(lambd_prev + delta_lambd, 1)
@@ -105,12 +94,12 @@ def HomotopyMethod(x_ini, lambd_step=0.05, tol=1e-5, max_iter=1000):
             k += 1
             resultado['x'].append(x1)
             resultado['lambda'].append(lambd)
-            print('Iteracion: {} \t \u03BB= {:.2f} \t x = {}'.format(k, lambd, x1))#Print del paso a paso
+            #print('Iteracion: {} \t \u03BB= {:.2f} \t x = {}'.format(k, lambd, x1))#Print del paso a paso
         if np.isnan(np.sum(x1)):
             print('Solucion no encontrada. Ingrese otro valor inicial  x.')
             return None
     if not np.isnan(np.sum(x1)):
-        print('Solucion: x =', x1)
+        pass
     return resultado
 def Newton_extendido(x,max_iterations):
     tol = 1*10**(-5)
@@ -126,19 +115,21 @@ def Newton_extendido(x,max_iterations):
         array_sol.append(new_x)
         x = new_x
     return new_x, np.array(array_sol)
-
-
 x_init = np.array([3,40])
 new_sol,new_sol_array = Newton_extendido(x_init, 10000)
+print("Solucion por método de Newton:")
+print(new_sol)
 homotopy = HomotopyMethod(x_init)
-
 res_x1 = []
 res_x2 = []
 for i in range(len(homotopy["x"])):
     result = homotopy["x"][i]
     res_x1.append(result[0])
     res_x2.append(result[1])
-#Grafica de mi x_1
+print("Solucion por método de homotopia:")
+print(res_x1[len(res_x1)-1], res_x2[len(res_x2)-1])
+
+#Grafica de  x_1
 plt.figure(figsize=(12,6))
 plt.subplot(121)
 plt.plot(new_sol_array[:,0])
@@ -153,7 +144,7 @@ plt.title("Método Homotopia")
 plt.xlabel("Iteración")
 plt.show()
 
-#Grafica de mi x2
+#Grafica de x2
 plt.figure(figsize=(12,6))
 plt.subplot(121)
 plt.plot(new_sol_array[:,1])
